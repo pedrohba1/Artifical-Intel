@@ -6,7 +6,7 @@ adapted by Dino Franklin
 '''
 
 import os, sys, random, time, threading
-import maze_gbc063_novisual as maze
+import maze_gbc063 as maze
 import gbc063
 from concluded_maze import *
 import csv
@@ -38,13 +38,13 @@ COLOR_BG_WHITE= u'\u001b[47m'
 
 
 
-
 def play_maze(maze_obj, limit,tinkle):
+	
 	#clear the screen clear if linux, cls if windows
 	os.system('clear' if os.name!='nt' else 'cls')	
 	
 	# mostra o labirinto
-	#print(maze_obj.to_str())	
+	print(maze_obj.to_str())	
 	current = (0,0)
 	# em (0,0) pergunta para o labirinto acoes possiveis
 	info = maze_obj.move(current)
@@ -59,13 +59,14 @@ def play_maze(maze_obj, limit,tinkle):
 
 	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
 	while not (move > limit) and not maze_obj.is_done():
+		time.sleep(1)
 		#info = gbc063.algoritmo_profundidade(current, options,visitado)   
 	# para debug
 		#print('pos:',current)#,'\noptions\n')
 		#for i in range(len(options)):
 		#	print(options[i])
-		action = gbc063.algoritmo_profundidade(current, options,visitado)
-		#action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
+		#action = gbc063.algoritmo_profundidade(current, options,visitado)
+		action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
 		if(action == []):
 			aprofundamento +=1
 			visitado = []
@@ -79,16 +80,12 @@ def play_maze(maze_obj, limit,tinkle):
 
 	# saindo
 	if (move < limit):
-		print('O objetivo foi atingido com ',move,' movimentos')
+		print('O objetivo foi atingido com ',move,' movimentos');
 		print('Solucao (',len(maze_obj.path),' passos)')
 		print(maze_obj.path)
-		distanciaTotal = len(maze_obj.path)
-		cMaze = make_concluded_maze(move, len(maze_obj.path))
-		return cMaze
 	else:
-		print('O objetivo nao foi atingido em ',move,' movimentos.')
-		cMaze = make_concluded_maze(move, 0)
-		return cMaze
+		print('O objetivo nao foi atingido em ',move,' movimentos.');
+		
 		
 
 
@@ -98,6 +95,7 @@ def main():
 	width = 10 	#20
 	height = 10 	#12
 	limite = 99
+	seed = random.random()*10000		
 	is_block = True
 	is_color = True
 	block_symbol = u'\u2588'#unicode FullBlock
@@ -152,18 +150,12 @@ def main():
 		algo do tipo plt.boxplot(labiritos, movimentos) 
 	 """
 	
-	with open('labiriton.csv', 'w', newline='') as csvfile:
-		fieldnames = ['movimentos', 'passos']
-		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-		writer.writeheader()
-		for x in range(0,100):
-			seed = random.random()*10000		
-			maze_obj = maze.Maze(width, height, seed)
-			cMaze = play_maze(maze_obj,limite,clock)
-			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps})
 
-	return
 	
+	maze_obj = maze.Maze(width, height, seed,symbols)
+	play_maze(maze_obj,limite,clock)
+
+
 	
 			
 

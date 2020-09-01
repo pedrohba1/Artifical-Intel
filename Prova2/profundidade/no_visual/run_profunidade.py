@@ -40,6 +40,7 @@ COLOR_BG_WHITE= u'\u001b[47m'
 
 
 def play_maze(maze_obj, limit,tinkle):
+	
 	#clear the screen clear if linux, cls if windows
 	os.system('clear' if os.name!='nt' else 'cls')	
 	
@@ -151,6 +152,8 @@ def main():
 		gerar um boxplot de labirintos x quantidade de passos e labirinto x movivmentos
 		algo do tipo plt.boxplot(labiritos, movimentos) 
 	 """
+	
+
 	
 	with open('labiriton.csv', 'w', newline='') as csvfile:
 		fieldnames = ['movimentos', 'passos']

@@ -38,13 +38,13 @@ COLOR_BG_WHITE= u'\u001b[47m'
 
 
 
-
 def play_maze(maze_obj, limit,tinkle):
+	
 	#clear the screen clear if linux, cls if windows
 	os.system('clear' if os.name!='nt' else 'cls')	
 	
 	# mostra o labirinto
-	#print(maze_obj.to_str())	
+	# print(maze_obj.to_str())	
 	current = (0,0)
 	# em (0,0) pergunta para o labirinto acoes possiveis
 	info = maze_obj.move(current)
@@ -64,8 +64,8 @@ def play_maze(maze_obj, limit,tinkle):
 		#print('pos:',current)#,'\noptions\n')
 		#for i in range(len(options)):
 		#	print(options[i])
-		action = gbc063.algoritmo_profundidade(current, options,visitado)
-		#action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
+		#action = gbc063.algoritmo_profundidade(current, options,visitado)
+		action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
 		if(action == []):
 			aprofundamento +=1
 			visitado = []
@@ -79,14 +79,13 @@ def play_maze(maze_obj, limit,tinkle):
 
 	# saindo
 	if (move < limit):
-		print('O objetivo foi atingido com ',move,' movimentos')
+		print('O objetivo foi atingido com ',move,' movimentos');
 		print('Solucao (',len(maze_obj.path),' passos)')
 		print(maze_obj.path)
-		distanciaTotal = len(maze_obj.path)
 		cMaze = make_concluded_maze(move, len(maze_obj.path))
 		return cMaze
 	else:
-		print('O objetivo nao foi atingido em ',move,' movimentos.')
+		print('O objetivo nao foi atingido em ',move,' movimentos.');
 		cMaze = make_concluded_maze(move, 0)
 		return cMaze
 		
@@ -97,7 +96,7 @@ def main():
 	clock = 0.1
 	width = 10 	#20
 	height = 10 	#12
-	limite = 99
+	limite = 10000
 	is_block = True
 	is_color = True
 	block_symbol = u'\u2588'#unicode FullBlock
@@ -151,6 +150,8 @@ def main():
 		gerar um boxplot de labirintos x quantidade de passos e labirinto x movivmentos
 		algo do tipo plt.boxplot(labiritos, movimentos) 
 	 """
+	
+
 	
 	with open('labiriton.csv', 'w', newline='') as csvfile:
 		fieldnames = ['movimentos', 'passos']
