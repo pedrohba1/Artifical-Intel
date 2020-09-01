@@ -6,7 +6,7 @@ adapted by Dino Franklin
 '''
 
 import os, sys, random, time, threading
-import maze_gbc063_novisual as maze
+import maze_gbc063 as maze
 import gbc063
 from concluded_maze import *
 import csv
@@ -40,12 +40,10 @@ COLOR_BG_WHITE= u'\u001b[47m'
 
 
 def play_maze(maze_obj, limit,tinkle):
-	
-	#clear the screen clear if linux, cls if windows
 	os.system('clear' if os.name!='nt' else 'cls')	
 	
 	# mostra o labirinto
-	#print(maze_obj.to_str())	
+	print(maze_obj.to_str())	
 	current = (0,0)
 	# em (0,0) pergunta para o labirinto acoes possiveis
 	info = maze_obj.move(current)
@@ -60,22 +58,14 @@ def play_maze(maze_obj, limit,tinkle):
 
 	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
 	while not (move > limit) and not maze_obj.is_done():
-		#info = gbc063.algoritmo_profundidade(current, options,visitado)   
-	# para debug
-		#print('pos:',current)#,'\noptions\n')
-		#for i in range(len(options)):
-		#	print(options[i])
-		action = gbc063.algoritmo_profundidade(current, options,visitado)
-		#action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
-		if(action == []):
-			aprofundamento +=1
-			visitado = []
-			pilha = []
-		else:
-			info = maze_obj.move(action)
-			current = info[1]
-			options = info[2]
-		# update maze based on algoritmo feedback
+		time.sleep(0.5)
+		action = gbc063.subidaEncosta(current, options) 
+		if(action == False):
+			print("nao foi possivel achar melhor caminho")
+			break
+		info = maze_obj.move(action)
+		current = info[1]
+		options = info[2]
 		move += 1
 
 	# saindo
@@ -99,6 +89,7 @@ def main():
 	width = 10 	#20
 	height = 10 	#12
 	limite = 99
+	seed = random.random()*10000		
 	is_block = True
 	is_color = True
 	block_symbol = u'\u2588'#unicode FullBlock
@@ -155,17 +146,10 @@ def main():
 	
 
 	
-	with open('labiriton.csv', 'w', newline='') as csvfile:
-		fieldnames = ['movimentos', 'passos']
-		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-		writer.writeheader()
-		for x in range(0,100):
-			seed = random.random()*10000		
-			maze_obj = maze.Maze(width, height, seed)
-			cMaze = play_maze(maze_obj,limite,clock)
-			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps})
-	return
-	
+	maze_obj = maze.Maze(width, height, seed,symbols)
+	play_maze(maze_obj,limite,clock)
+
+
 	
 			
 
