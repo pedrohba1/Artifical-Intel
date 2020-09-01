@@ -6,7 +6,7 @@ adapted by Dino Franklin
 '''
 
 import os, sys, random, time, threading
-import maze_gbc063 as maze
+import maze_gbc063_novisual as maze
 import gbc063
 from concluded_maze import *
 import csv
@@ -45,7 +45,7 @@ def play_maze(maze_obj, limit,tinkle):
 	os.system('clear' if os.name!='nt' else 'cls')	
 	
 	# mostra o labirinto
-	print(maze_obj.to_str())	
+	#print(maze_obj.to_str())	
 	current = (0,0)
 	# em (0,0) pergunta para o labirinto acoes possiveis
 	info = maze_obj.move(current)
@@ -96,7 +96,6 @@ def play_maze(maze_obj, limit,tinkle):
 def main():
 
 	clock = 0.1
-	seed = random.random()*10000		
 	width = 10 	#20
 	height = 10 	#12
 	limite = 99
@@ -144,7 +143,7 @@ def main():
 	symbols.update(color_symbols)
 				
 	# cria o labirinto
-	maze_obj = maze.Maze(width, height, seed, symbols)
+	
 
 	# usa seu algoritmo (gbc063) para sair do labirinto
 	
@@ -154,9 +153,15 @@ def main():
 		algo do tipo plt.boxplot(labiritos, movimentos) 
 	 """
 	
-
-	cMaze = play_maze(maze_obj,limite,clock)
-
+	with open('labiriton.csv', 'w', newline='') as csvfile:
+		fieldnames = ['movimentos', 'passos']
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+		writer.writeheader()
+		for x in range(0,100):
+			seed = random.random()*10000		
+			maze_obj = maze.Maze(width, height, seed)
+			cMaze = play_maze(maze_obj,limite,clock)
+			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps})
 
 	return
 	
