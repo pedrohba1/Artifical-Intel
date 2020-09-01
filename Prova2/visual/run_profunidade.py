@@ -8,6 +8,9 @@ adapted by Dino Franklin
 import os, sys, random, time, threading
 import maze_gbc063 as maze
 import gbc063
+from concluded_maze import *
+import csv
+import matplotlib.pyplot as plt
 
 
 # defalt ANSI settings from user
@@ -31,6 +34,11 @@ COLOR_BG_MAGENTA =  u'\u001b[45m'
 COLOR_BG_CYAN = u'\u001b[46m'
 COLOR_BG_WHITE= u'\u001b[47m'
 
+
+
+
+
+
 def play_maze(maze_obj, limit,tinkle):
 	
 	#clear the screen clear if linux, cls if windows
@@ -52,13 +60,12 @@ def play_maze(maze_obj, limit,tinkle):
 
 	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
 	while not (move > limit) and not maze_obj.is_done():
-		time.sleep(1)
 		#info = gbc063.algoritmo_profundidade(current, options,visitado)   
 	# para debug
 		#print('pos:',current)#,'\noptions\n')
 		#for i in range(len(options)):
 		#	print(options[i])
-		#action = gbc063.algoritmo_profundidade(current, options,visitado)
+		action = gbc063.algoritmo_profundidade(current, options,visitado)
 		#action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
 		if(action == []):
 			aprofundamento +=1
@@ -73,12 +80,18 @@ def play_maze(maze_obj, limit,tinkle):
 
 	# saindo
 	if (move < limit):
-		print('O objetivo foi atingido com ',move,' movimentos');
+		print('O objetivo foi atingido com ',move,' movimentos')
 		print('Solucao (',len(maze_obj.path),' passos)')
 		print(maze_obj.path)
+		distanciaTotal = len(maze_obj.path)
+		cMaze = make_concluded_maze(move, len(maze_obj.path))
+		return cMaze
 	else:
-		print('O objetivo nao foi atingido em ',move,' movimentos.');
+		print('O objetivo nao foi atingido em ',move,' movimentos.')
+		cMaze = make_concluded_maze(move, 0)
+		return cMaze
 		
+
 
 def main():
 
@@ -131,13 +144,25 @@ def main():
 	symbols.update(color_symbols)
 				
 	# cria o labirinto
-	maze_obj = maze.Maze(width, height, seed)
+	maze_obj = maze.Maze(width, height, seed, symbols)
 
 	# usa seu algoritmo (gbc063) para sair do labirinto
-	play_maze(maze_obj,limite,clock)
+	
+	""" rodar o labirinto 100 vezes
+		colocar o resultado de cada labirinto em uma classe com a quantidade de passos e movimentos resultantes
+		gerar um boxplot de labirintos x quantidade de passos e labirinto x movivmentos
+		algo do tipo plt.boxplot(labiritos, movimentos) 
+	 """
+	
 
+	cMaze = play_maze(maze_obj,limite,clock)
+
+
+	return
+	
+	
+			
 
 # main
 if __name__ == '__main__':
 	main() 
-	input()
