@@ -57,15 +57,14 @@ def play_maze(maze_obj, limit,tinkle):
 		
 	move = 0
 
-	visitado = []
-	pilha = []
-	# sai qdo atinge o max de passos ou chega no objetivo
 
-	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
-	temp = 100
-	fator_diminuicao = 1
+	# sai qdo atinge o max de passos ou chega no objetivo
+	temp = 1000
+	fator_diminuicao = 2
 	while not (move > limit) and not maze_obj.is_done():
-		action = gbc063.tempera(current, options,temp) 
+		action = gbc063.tempera(current, options,temp)
+		if(action ==1):
+			break 
 		temp-= fator_diminuicao
 		info = maze_obj.move(action)
 		current = info[1]
@@ -95,7 +94,7 @@ def main():
 	clock = 0.1
 	width = 10 	#20
 	height = 10 	#12
-	limite = 99
+	limite = 999
 	is_block = True
 	is_color = True
 	block_symbol = u'\u2588'#unicode FullBlock
@@ -151,16 +150,15 @@ def main():
 	 """
 	
 
-	
-	with open('labiriton.csv', 'w', newline='') as csvfile:
-		fieldnames = ['movimentos', 'passos', 'distancia_ao_final']
+	with open('labirinto_1.csv', 'w', newline='') as csvfile:
+		fieldnames = ['movimentos', 'caminho_total', 'distancia_ao_final']
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 		writer.writeheader()
 		for x in range(0,100):
 			seed = random.random()*10000		
 			maze_obj = maze.Maze(width, height, seed)
 			cMaze = play_maze(maze_obj,limite,clock)
-			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps, 'distancia_ao_final': cMaze.distancia_ao_final})
+			writer.writerow({'movimentos': cMaze.total_moves, 'caminho_total': cMaze.steps, 'distancia_ao_final': cMaze.distancia_ao_final})
 	return
 	
 	

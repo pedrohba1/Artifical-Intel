@@ -56,7 +56,7 @@ def play_maze(maze_obj, limit,tinkle):
 	pilha = []
 	# sai qdo atinge o max de passos ou chega no objetivo
 
-	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
+	
 	while not (move > limit) and not maze_obj.is_done():
 		time.sleep(0.5)
 		action = gbc063.subidaEncosta(current, options) 

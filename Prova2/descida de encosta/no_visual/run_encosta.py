@@ -54,41 +54,34 @@ def play_maze(maze_obj, limit,tinkle):
 		
 	move = 0
 
-	visitado = []
-	pilha = []
+
 	# sai qdo atinge o max de passos ou chega no objetivo
 
-	aprofundamento = 1# int(input("Nivel maximo de aprofundamento:"))
 	while not (move > limit) and not maze_obj.is_done():
-		#info = gbc063.algoritmo_profundidade(current, options,visitado)   
-	# para debug
-		#print('pos:',current)#,'\noptions\n')
-		#for i in range(len(options)):
-		#	print(options[i])
-		action = gbc063.algoritmo_profundidade(current, options,visitado)
-		#action = gbc063.algoritmo_aprofundamento_iterativo(current, options,pilha,visitado,aprofundamento)
-		if(action == []):
-			aprofundamento +=1
-			visitado = []
-			pilha = []
-		else:
-			info = maze_obj.move(action)
-			current = info[1]
-			options = info[2]
-		# update maze based on algoritmo feedback
+		action = gbc063.subidaEncosta(current, options) 
+		if(action == False):
+			print("nao foi possivel achar melhor caminho")
+			break
+		info = maze_obj.move(action)
+		current = info[1]
+		options = info[2]
 		move += 1
 
-	# saindo
+
+	#saindo 
 	if (move < limit):
 		print('O objetivo foi atingido com ',move,' movimentos')
 		print('Solucao (',len(maze_obj.path),' passos)')
 		print(maze_obj.path)
 		distanciaTotal = len(maze_obj.path)
-		cMaze = make_concluded_maze(move, len(maze_obj.path))
+		distancia_ao_final = gbc063.distanciaManhattan(maze_obj.player,(9,9))
+		cMaze = make_concluded_maze(move, distanciaTotal, distancia_ao_final)
 		return cMaze
 	else:
 		print('O objetivo nao foi atingido em ',move,' movimentos.')
-		cMaze = make_concluded_maze(move, 0)
+		distanciaTotal = len(maze_obj.path)
+		distancia_ao_final = gbc063.distanciaManhattan(maze_obj.player,(9,9))
+		cMaze = make_concluded_maze(move, distanciaTotal, distancia_ao_final)
 		return cMaze
 		
 
@@ -156,14 +149,14 @@ def main():
 
 	
 	with open('labiriton.csv', 'w', newline='') as csvfile:
-		fieldnames = ['movimentos', 'passos']
+		fieldnames = ['movimentos', 'passos', 'distancia_ao_final']
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 		writer.writeheader()
 		for x in range(0,100):
 			seed = random.random()*10000		
 			maze_obj = maze.Maze(width, height, seed)
 			cMaze = play_maze(maze_obj,limite,clock)
-			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps})
+			writer.writerow({'movimentos': cMaze.total_moves, 'passos': cMaze.steps, 'distancia_ao_final': cMaze.distancia_ao_final})
 	return
 	
 	
