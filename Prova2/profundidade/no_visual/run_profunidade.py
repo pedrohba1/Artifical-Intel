@@ -98,7 +98,7 @@ def main():
 	clock = 0.1
 	width = 10 	#20
 	height = 10 	#12
-	limite = 99
+	limite = 1000
 	is_block = True
 	is_color = True
 	block_symbol = u'\u2588'#unicode FullBlock
